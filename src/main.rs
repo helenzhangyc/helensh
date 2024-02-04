@@ -12,8 +12,14 @@ impl MyPrompt {
 impl Prompt for MyPrompt {
     fn prompt_left(&self, line_ctx: &LineCtx) -> styled_buf::StyledBuf {
         let now = Utc::now();
-        let days_till_fri = (7 + 4 - now.weekday().num_days_from_monday()) % 7;
-        styled_buf!("Friday in ", days_till_fri.to_string(), " days > ")
+        let days = ((7 + 4 - now.weekday().num_days_from_monday()) % 7).to_string();
+
+        let colored_days = match days.as_str() {
+            "0" => days.black(),
+            _ => days.blue(),
+        };
+
+        styled_buf!("Friday in ", colored_days, " days > ")
     }
     fn prompt_right(&self, line_ctx: &LineCtx) -> styled_buf::StyledBuf {
         styled_buf!(" ")
